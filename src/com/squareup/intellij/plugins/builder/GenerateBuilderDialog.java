@@ -3,10 +3,13 @@ package com.squareup.intellij.plugins.builder;
 import com.google.common.collect.Lists;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.LabeledComponent;
+import com.intellij.psi.PsiAnnotation;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiModifier;
+import com.intellij.psi.PsiNameValuePair;
 import com.intellij.ui.ToolbarDecorator;
+import com.intellij.ui.table.JBTable;
 import java.util.List;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
@@ -24,8 +27,8 @@ public class GenerateBuilderDialog extends DialogWrapper {
     super(psiClass.getProject());
     setTitle("Select Fields for Builder");
 
-    fieldTableModel = new FieldTableModel(getMemberFields(psiClass));
-    JTable table = new JTable(fieldTableModel);
+    fieldTableModel = new FieldTableModel(getTableEntries(getMemberFields(psiClass)));
+    JTable table = new JBTable(fieldTableModel);
     ToolbarDecorator decorator = ToolbarDecorator.createDecorator(table);
     decorator.disableAddAction();
     JPanel panel = decorator.createPanel();
@@ -40,6 +43,36 @@ public class GenerateBuilderDialog extends DialogWrapper {
 
   public List<TableEntry> getEntries() {
     return fieldTableModel.getEntries();
+  }
+
+  private List<TableEntry> getTableEntries(List<PsiField> fields) {
+    List<TableEntry> tableEntries = Lists.newArrayList();
+    for (PsiField field : fields) {
+      TableEntry tableEntry = new TableEntry(field);
+      tableEntries.add(tableEntry);
+
+      // Attempt to infer nullable from javax.persistence annotations.
+      for (PsiAnnotation annotation : field.getModifierList().getAnnotations()) {
+        if (annotation.getQualifiedName().equals("javax.persistence.Column")) {
+          tableEntry.setNullable(Boolean.TRUE);
+          for (PsiNameValuePair pair : annotation.getParameterList().getAttributes()) {
+            if (pair.getName().equals("nullable") &&
+                !Boolean.valueOf(pair.getValue().getText())) {
+              tableEntry.setNullable(Boolean.FALSE);
+            }
+          }
+        } else if (annotation.getQualifiedName().equals("javax.persistence.ManyToOne")) {
+          tableEntry.setNullable(Boolean.TRUE);
+          for (PsiNameValuePair pair : annotation.getParameterList().getAttributes()) {
+            if (pair.getName().equals("optional") &&
+                !Boolean.valueOf(pair.getValue().getText())) {
+              tableEntry.setNullable(Boolean.FALSE);
+            }
+          }
+        }
+      }
+    }
+    return tableEntries;
   }
 
   private List<PsiField> getMemberFields(PsiClass psiClass) {

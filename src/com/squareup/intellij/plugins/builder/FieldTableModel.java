@@ -1,11 +1,11 @@
 package com.squareup.intellij.plugins.builder;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
-import com.intellij.psi.PsiField;
 import com.intellij.util.ui.EditableModel;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * An {@link AbstractTableModel} for the {@link GenerateBuilderDialog}.
@@ -13,13 +13,11 @@ import javax.swing.table.AbstractTableModel;
 public class FieldTableModel extends AbstractTableModel implements EditableModel {
 
   private static final List<String> COLUMN_NAMES = ImmutableList.of("Field", "Nullable");
+
   private final List<TableEntry> entries;
 
-  public FieldTableModel(List<PsiField> fields) {
-    entries = Lists.newArrayList();
-    for (PsiField field : fields) {
-      entries.add(new TableEntry(field));
-    }
+  public FieldTableModel(List<TableEntry> tableEntries) {
+    entries = ImmutableList.copyOf(checkNotNull(tableEntries));
   }
 
   @Override public int getRowCount() {
