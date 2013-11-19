@@ -1,6 +1,7 @@
 package com.squareup.intellij.plugins.builder;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 import com.intellij.util.ui.EditableModel;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
@@ -17,7 +18,8 @@ public class FieldTableModel extends AbstractTableModel implements EditableModel
   private final List<TableEntry> entries;
 
   public FieldTableModel(List<TableEntry> tableEntries) {
-    entries = ImmutableList.copyOf(checkNotNull(tableEntries));
+
+    entries = Lists.newArrayList(checkNotNull(tableEntries));
   }
 
   @Override public int getRowCount() {
