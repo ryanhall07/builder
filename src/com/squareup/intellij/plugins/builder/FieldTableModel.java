@@ -1,4 +1,4 @@
-package com.squareup.intellij.plugins;
+package com.squareup.intellij.plugins.builder;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;

@@ -1,4 +1,4 @@
-package com.squareup.intellij.plugins;
+package com.squareup.intellij.plugins.builder;
 
 import com.intellij.psi.PsiField;
 

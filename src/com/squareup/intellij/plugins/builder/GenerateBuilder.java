@@ -1,4 +1,4 @@
-package com.squareup.intellij.plugins;
+package com.squareup.intellij.plugins.builder;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
@@ -127,6 +127,28 @@ public class GenerateBuilder extends AnAction {
       builderClass.add(builderMethod);
 
     }
+
+    PsiMethod prototypeMethod = elementFactory.createMethod(
+        "fromPrototype",
+        elementFactory.createType(builderClass));
+    prototypeMethod.getParameterList().add(
+        elementFactory.createParameter("prototype", elementFactory.createType(psiClass)));
+
+    for (TableEntry entry : dialog.getEntries()) {
+      PsiField field = entry.getField();
+      StringBuilder assignBuilder = new StringBuilder()
+          .append(field.getName()).append(" = prototype.").append(field.getName()).append(";\n");
+      PsiStatement assignStatement = elementFactory.createStatementFromText(
+          assignBuilder.toString(),
+          builderClass);
+      prototypeMethod.getBody().add(assignStatement);
+    }
+    PsiStatement prototypeReturnStatement = elementFactory.createStatementFromText(
+        "return this;\n",
+        builderClass);
+    prototypeMethod.getBody().add(prototypeReturnStatement);
+    builderClass.add(prototypeMethod);
+
 
     PsiMethod buildMethod = elementFactory.createMethod(
         "build",
