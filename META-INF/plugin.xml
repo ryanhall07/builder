@@ -26,7 +26,9 @@
   </project-components>
 
   <actions>
-    <action id="generateBuilder" class="com.squareup.intellij.plugins.builder.GenerateBuilder" text="Builder..."
+    <action id="com.squareup.intellij.plugins.builder"
+        class="com.squareup.intellij.plugins.builder.GenerateBuilder"
+        text="Builder..."
         description="Generates a static inner Builder">
       <add-to-group group-id="GenerateGroup" anchor="last"/>
     </action>

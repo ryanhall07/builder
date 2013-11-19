@@ -15,7 +15,7 @@ public class FieldTableModel extends AbstractTableModel implements EditableModel
   private static final List<String> COLUMN_NAMES = ImmutableList.of("Field", "Nullable");
   private final List<TableEntry> entries;
 
-  public FieldTableModel(PsiField... fields) {
+  public FieldTableModel(List<PsiField> fields) {
     entries = Lists.newArrayList();
     for (PsiField field : fields) {
       entries.add(new TableEntry(field));
