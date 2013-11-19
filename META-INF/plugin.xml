@@ -1,7 +1,7 @@
 <idea-plugin version="2">
   <id>com.squareup.intellij.plugins.builder</id>
   <name>Builder plugin</name>
-  <version>0.1</version>
+  <version>0.1.1</version>
   <vendor email="rhall@squareup.com" url="http://www.squareup.com">Square Inc.</vendor>
 
   <description><![CDATA[
