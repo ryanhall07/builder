@@ -1,3 +1,5 @@
+package com.squareup.intellij.plugins;
+
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.LabeledComponent;
 import com.intellij.psi.PsiClass;
@@ -8,8 +10,7 @@ import javax.swing.JPanel;
 import javax.swing.JTable;
 
 /**
- * Created with IntelliJ IDEA. User: rhall Date: 11/18/13 Time: 2:20 PM To change this template use
- * File | Settings | File Templates.
+ * A {@link DialogWrapper} for generating a Builder class.
  */
 public class GenerateBuilderDialog extends DialogWrapper {
 

@@ -1,3 +1,5 @@
+package com.squareup.intellij.plugins;
+
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.intellij.psi.PsiField;
@@ -6,16 +8,14 @@ import java.util.List;
 import javax.swing.table.AbstractTableModel;
 
 /**
-* Created with IntelliJ IDEA. User: rhall Date: 11/18/13 Time: 8:16 PM To change this template use
-* File | Settings | File Templates.
-*/
+ * An {@link AbstractTableModel} for the {@link GenerateBuilderDialog}.
+ */
 public class FieldTableModel extends AbstractTableModel implements EditableModel {
 
-  private final List<String> columnNames;
+  private static final List<String> COLUMN_NAMES = ImmutableList.of("Field", "Nullable");
   private final List<TableEntry> entries;
 
   public FieldTableModel(PsiField... fields) {
-    columnNames = ImmutableList.of("Field", "Nullable");
     entries = Lists.newArrayList();
     for (PsiField field : fields) {
       entries.add(new TableEntry(field));
@@ -27,24 +27,24 @@ public class FieldTableModel extends AbstractTableModel implements EditableModel
   }
 
   @Override public int getColumnCount() {
-    return columnNames.size();
+    return COLUMN_NAMES.size();
   }
 
   @Override public Object getValueAt(int row, int col) {
     TableEntry entry = entries.get(row);
-    return col == 0 ? entry.getField().getName() : entry.isNullable();
+    return col == TableEntry.FIELD_INDEX ? entry.getField().getName() : entry.isNullable();
   }
 
   @Override public Class<?> getColumnClass(int i) {
-    return getValueAt(0, i).getClass();
+    return getValueAt(TableEntry.FIELD_INDEX, i).getClass();
   }
 
   @Override public String getColumnName(int i) {
-    return columnNames.get(i);
+    return COLUMN_NAMES.get(i);
   }
 
   @Override public boolean isCellEditable(int row, int col) {
-    return col == 1;
+    return col == TableEntry.NULLABLE_INDEX;
   }
 
   @Override public void setValueAt(Object o, int row, int col) {

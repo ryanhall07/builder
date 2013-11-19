@@ -33,7 +33,7 @@
   </project-components>
 
   <actions>
-    <action id="generateBuilder" class="GenerateBuilder" text="Builder..."
+    <action id="generateBuilder" class="com.squareup.intellij.plugins.GenerateBuilder" text="Builder..."
         description="Generates a static inner Builder">
       <add-to-group group-id="GenerateGroup" anchor="last"/>
     </action>
