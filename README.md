@@ -6,6 +6,12 @@ Install
 -------
 * Download the .jar file from https://git.squareup.com/rhall/builder-plugin/releases
 * From Intellij: Preferences -> Plugins -> Install plugin from disk...
+* Restart Intellij
+
+Update
+------
+* Follow the Install instructions for the latest release .jar file.
+* Intellij seems to be buggy and will report the plugin can be upgraded.  Just ignore.  The version should be correct on the right pane.
 
 Use
 -------
