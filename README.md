@@ -18,3 +18,9 @@ Use
 -------
 * From a Class, right click -> Generate... -> Builder...
 * Remove any fields you don't want and select which fields are nullable
+
+Features
+--------
+* Select what fields you want to include in the Builder.
+* Select fields are non-null and <code>Preconditions.checkNotNull</code>s will be added to constructor.
+* If <code>javax.persistence</code> annotations exist on fields, nullable will be inferred.
