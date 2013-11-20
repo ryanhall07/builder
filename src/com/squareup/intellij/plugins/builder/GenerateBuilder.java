@@ -1,34 +1,34 @@
 package com.squareup.intellij.plugins.builder;
 
+import com.google.common.collect.ImmutableList;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiElementFactory;
-import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiMethod;
-import com.intellij.psi.PsiModifier;
-import com.intellij.psi.PsiParameter;
-import com.intellij.psi.PsiStatement;
-import com.intellij.psi.codeStyle.JavaCodeStyleManager;
 import com.intellij.psi.util.PsiTreeUtil;
+import java.util.List;
 
-/**
- * {@link AnAction} that generates a Builder class.
- */
+/** {@link AnAction} that generates a Builder class. */
 public class GenerateBuilder extends AnAction {
 
-  @Override public void update(AnActionEvent e) {
+  private final List<BuilderGenerator> generators = ImmutableList.of(
+      new BuilderClassGenerator(),
+      new ConstructorGenerator(),
+      new GettersGenerator()
+  );
+
+  @Override
+  public void update(AnActionEvent e) {
     PsiClass psiClass = getPsiClassFromContext(e);
     e.getPresentation().setEnabled(psiClass != null);
   }
 
+  @Override
   public void actionPerformed(AnActionEvent e) {
     final PsiClass psiClass = getPsiClassFromContext(e);
     final GenerateBuilderDialog dialog = new GenerateBuilderDialog(psiClass);
@@ -36,132 +36,15 @@ public class GenerateBuilder extends AnAction {
     if (dialog.isOK()) {
       new WriteCommandAction.Simple(psiClass.getProject(), psiClass.getContainingFile()) {
         @Override protected void run() throws Throwable {
-          deletePrevious(psiClass);
-          generateConstructor(psiClass, dialog);
-          generateBuilder(psiClass, dialog);
+          for (BuilderGenerator generator : generators) {
+            generator.rollback(psiClass, dialog);
+          }
+          for (BuilderGenerator generator : generators) {
+            generator.generate(psiClass, dialog);
+          }
         }
       }.execute();
     }
-  }
-
-  private void deletePrevious(PsiClass psiClass) {
-    PsiClass[] innerClasses = psiClass.getInnerClasses();
-    for (PsiClass innerClass : innerClasses) {
-      if (innerClass.getName().equals("Builder")) {
-        innerClass.delete();
-        break;
-      }
-    }
-
-    for (PsiMethod constructor : psiClass.getConstructors()) {
-      PsiParameter[] parameters = constructor.getParameterList().getParameters();
-      if (parameters.length == 1 && parameters[0].getName().equals("builder")) {
-        constructor.delete();
-        break;
-      }
-    }
-  }
-
-  private void generateConstructor(PsiClass psiClass, GenerateBuilderDialog dialog) {
-    PsiElementFactory elementFactory = JavaPsiFacade.getElementFactory(psiClass.getProject());
-    PsiClass builderClass = elementFactory.createClass("Builder");
-    PsiMethod constructor = elementFactory.createConstructor();
-    constructor.getModifierList().setModifierProperty(PsiModifier.PRIVATE, true);
-    constructor.getModifierList().setModifierProperty(PsiModifier.PUBLIC, false);
-    constructor.getParameterList().add(
-        elementFactory.createParameter("builder", elementFactory.createType(builderClass)));
-
-    for (TableEntry entry : dialog.getEntries()) {
-      PsiField field = entry.getField();
-      StringBuilder fieldAssign = new StringBuilder()
-          .append("this.").append(field.getName()).append(" = ");
-      if (entry.isNullable()) {
-        fieldAssign.append("builder.").append(field.getName());
-      } else {
-        fieldAssign.append("com.google.common.base.Preconditions.checkNotNull(builder.")
-            .append(field.getName())
-            .append(")");
-      }
-      fieldAssign.append(";\n");
-
-      PsiStatement assignStatement = elementFactory.createStatementFromText(
-          fieldAssign.toString(),
-          psiClass);
-      PsiElement assignShortened = JavaCodeStyleManager.getInstance(psiClass.getProject())
-          .shortenClassReferences(assignStatement);
-      constructor.getBody().add(assignShortened);
-    }
-
-    psiClass.add(constructor);
-    return;
-  }
-
-  private void generateBuilder(PsiClass psiClass, GenerateBuilderDialog dialog) {
-    PsiElementFactory elementFactory = JavaPsiFacade.getElementFactory(psiClass.getProject());
-    PsiClass builderClass = elementFactory.createClass("Builder");
-    builderClass.getModifierList().add(elementFactory.createKeyword("static"));
-
-    for (TableEntry entry : dialog.getEntries()) {
-      PsiField field = entry.getField();
-      PsiField builderField = elementFactory.createField(field.getName(), field.getType());
-      builderClass.add(builderField);
-
-      PsiMethod builderMethod = elementFactory.createMethod(
-          field.getName(),
-          elementFactory.createType(builderClass));
-      PsiParameter parameter = elementFactory.createParameter(field.getName(), field.getType());
-      builderMethod.getParameterList().add(parameter);
-
-      StringBuilder assignBuilder = new StringBuilder()
-          .append("this.").append(field.getName()).append(" = ").append(field.getName())
-          .append(";\n");
-
-      PsiStatement assignStatement = elementFactory.createStatementFromText(
-          assignBuilder.toString(),
-          builderClass);
-      PsiStatement returnStatement = elementFactory.createStatementFromText(
-          "return this;\n",
-          builderClass);
-      builderMethod.getBody().add(assignStatement);
-      builderMethod.getBody().add(returnStatement);
-      builderClass.add(builderMethod);
-
-    }
-
-    PsiMethod prototypeMethod = elementFactory.createMethod(
-        "fromPrototype",
-        elementFactory.createType(builderClass));
-    prototypeMethod.getParameterList().add(
-        elementFactory.createParameter("prototype", elementFactory.createType(psiClass)));
-
-    for (TableEntry entry : dialog.getEntries()) {
-      PsiField field = entry.getField();
-      StringBuilder assignBuilder = new StringBuilder()
-          .append(field.getName()).append(" = prototype.").append(field.getName()).append(";\n");
-      PsiStatement assignStatement = elementFactory.createStatementFromText(
-          assignBuilder.toString(),
-          builderClass);
-      prototypeMethod.getBody().add(assignStatement);
-    }
-    PsiStatement prototypeReturnStatement = elementFactory.createStatementFromText(
-        "return this;\n",
-        builderClass);
-    prototypeMethod.getBody().add(prototypeReturnStatement);
-    builderClass.add(prototypeMethod);
-
-
-    PsiMethod buildMethod = elementFactory.createMethod(
-        "build",
-        elementFactory.createType(psiClass));
-    StringBuilder returnBuilder = new StringBuilder()
-        .append("return new ").append(psiClass.getName()).append("(this);\n");
-    PsiStatement returnStatement = elementFactory.createStatementFromText(
-        returnBuilder.toString(),
-        builderClass);
-    buildMethod.getBody().add(returnStatement);
-    builderClass.add(buildMethod);
-
-    psiClass.add(builderClass);
   }
 
   private PsiClass getPsiClassFromContext(AnActionEvent e) {
