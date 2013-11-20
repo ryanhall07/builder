@@ -24,3 +24,4 @@ Features
 * Select what fields you want to include in the Builder.
 * Select fields are non-null and <code>Preconditions.checkNotNull</code>s will be added to constructor.
 * If <code>javax.persistence</code> annotations exist on fields, nullable will be inferred.
+* Can optionally generate getters, which will return a Guava <code>Optional</code> if the field is nullable.
