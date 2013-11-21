@@ -2,6 +2,12 @@ Builder plugin for Intellij
 ================
 An Intellij plugin to generate a nested static Builder for a Class.
 
+Why another Builder plugin?
+---------------------------
+There were several Builder plugins already out there, but none that generated a Builder that conformed to the pattern
+laid out in [Effective Java](https://www.google.com/search?q=effective+java), which we use extensively.  In addition,
+the [Features](/README.md#features) outlines other goodies.
+
 Install
 -------
 * Download the .jar file from https://git.squareup.com/rhall/builder-plugin/releases
@@ -21,7 +27,8 @@ Use
 
 Features
 --------
+* Creates a static nested Builder that conforms to the pattern in Effective Java.
 * Select what fields you want to include in the Builder.
-* Select fields are non-null and <code>Preconditions.checkNotNull</code>s will be added to constructor.
-* If <code>javax.persistence</code> annotations exist on fields, nullable will be inferred.
+* A <code>Preconditions.checkNotNull</code> will be added to the constructor for non-null fields.
+* If <code>javax.persistence</code> annotations exist on fields, nullable will be inferred for the dialog.
 * Can optionally generate getters, which will return a Guava <code>Optional</code> if the field is nullable.
