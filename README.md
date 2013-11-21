@@ -29,8 +29,8 @@ Features
 --------
 * Creates a static nested Builder that conforms to the pattern in Effective Java.
 * Select what fields you want to include in the Builder.
-* A <code>Preconditions.checkNotNull</code> will be added to the constructor for non-null fields.
-* If <code>javax.persistence</code> annotations exist on fields, nullable will be inferred for the dialog.
+* A Guava <code>Preconditions.checkNotNull</code> will be added to the constructor for non-null fields.
+* If <code>javax.persistence</code> annotations exist on fields, nullable will be inferred for the UI dialog box.
 * Can optionally generate getters, which will return a Guava <code>Optional</code> if the field is nullable.
 
 Why a Builder?
