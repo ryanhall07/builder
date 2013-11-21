@@ -35,10 +35,52 @@ Features
 
 Why a Builder?
 --------------
-Section <b>TODO</code> in Effective Java already advocates using a Builder when your class has a lot of dependencies.
+Section <b>TODO</b> in Effective Java already advocates using a Builder when your class has a lot of dependencies.
 I would take it even further and argue for a Builder when you have 2 or more dependencies.  It makes your Tests more
-readable and easier to construct.  Let's look at an example.
+readable and easier to construct.  Usually a Test might look something like this:
 
+```java
+public void testBarThingIsDifferent() {
+  Bar bar1 = ... // complicated construction code with many fields
+  bar1.setThing("thing1");
+  Bar bar2 = ... // more construction code
+  bar2.setThing("thing2");
+  Zen zen = ... // still more setup code
+  Foo foo1 = new Foo(bar1, zen);
+  Foo foo2 = new Foo(bar2, zen);
+  assertSomethingAboutBar(foo1, foo2);
+}
+```
+Now if we use a Builder and write a test fixture method once:
+```java
+public Foo.Builder newFooBuilder() {
+  return new Foo.Builder()
+    .bar(newBar())
+    .zen(newZen());
+}
+```
+Now we can reuse the fixture method and only construct the Objects in a single place.
+```java
+public void testBarThingIsDifferent() {
+  Bar bar1 = testFixtures.newBarBuilder()
+     .thing1("thing1")
+     .build();
+  Bar bar2 = testFixtures.newBarBuilder()
+     .thing2("thing2")
+     .build();
+  Foo foo1 = testFixtures.newFooBuilder()
+    .bar(bar1)
+    .build();
+  Foo foo2 = testFixtures.newFooBuilder()
+    .bar(bar2)
+    .build();
+  assertSomethingAboutBar(foo1, foo2);
+}
+```
+Some good things about the new Test:
+
+1.  We've completed removed the construction of objects we don't care about, like <code>Zen</code>
+2.  It's very clear that <code>thing</code> is different and that's what we're testing.
 
 Example
 -------
