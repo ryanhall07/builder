@@ -63,7 +63,7 @@ public class TestFixtures {
   ...
 }
 ```
-Now we can reuse the fixture method and only construct the Objects in a single place.
+Now we can reuse the fixture method everywhere and only override exactly what we care about.
 ```java
 public void testBarThingIsDifferent() {
   Bar bar1 = testFixtures.newBarBuilder()
@@ -83,7 +83,7 @@ public void testBarThingIsDifferent() {
 ```
 Some good things about the new Test:
 
-1.  We've completed removed the construction of objects we don't care about, like <code>Zen</code>
+1.  We've completely removed the construction of objects we don't care about, like <code>Zen</code>
 2.  It's very clear that <code>thing</code> is different and that's what we're testing.
 
 Example
