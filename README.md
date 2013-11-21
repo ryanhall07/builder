@@ -53,10 +53,14 @@ public void testBarThingIsDifferent() {
 ```
 Now if we use a Builder and write a test fixture method once:
 ```java
-public Foo.Builder newFooBuilder() {
-  return new Foo.Builder()
-    .bar(newBar())
-    .zen(newZen());
+public class TestFixtures {
+  ...
+  public Foo.Builder newFooBuilder() {
+    return new Foo.Builder()
+      .bar(newBar())
+      .zen(newZen());
+  }
+  ...
 }
 ```
 Now we can reuse the fixture method and only construct the Objects in a single place.
