@@ -18,7 +18,7 @@ public class GettersGenerator implements BuilderGenerator {
 
   @Override public void generate(PsiClass psiClass, GenerateBuilderDialog dialog) {
     if (!dialog.shouldCreateGetters()) {
-
+      return;
     }
     PsiElementFactory elementFactory = JavaPsiFacade.getElementFactory(psiClass.getProject());
     for (TableEntry entry : dialog.getEntries()) {
