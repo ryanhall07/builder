@@ -32,3 +32,69 @@ Features
 * A <code>Preconditions.checkNotNull</code> will be added to the constructor for non-null fields.
 * If <code>javax.persistence</code> annotations exist on fields, nullable will be inferred for the dialog.
 * Can optionally generate getters, which will return a Guava <code>Optional</code> if the field is nullable.
+
+Why a Builder?
+--------------
+Section <b>TODO</code> in Effective Java already advocates using a Builder when your class has a lot of dependencies.
+I would take it even further and argue for a Builder when you have 2 or more dependencies.  It makes your Tests more
+readable and easier to construct.  Let's look at an example.
+
+
+Example
+-------
+The main drawback to using a Builder is the tedious overhead to write one.  The fewer dependencies you have, the less
+inclined you are to write one. But we just argued for a Builder with only 2 depenencies?  That's where the plugin comes in!
+Say you have the given class:
+```java
+  public class Foo {
+     private final Bar bar;
+     private final Zen zen; // This can be null.
+  }
+```
+With the click of a button you can generate the following code:
+```java
+public class Foo {
+
+  private Bar bar;
+  private Zen zen;
+
+  private Foo(Builder builder) {
+    this.bar = Preconditions.checkNotNull(builder.bar);
+    this.zen = builder.zen;
+  }
+
+  public Bar getBar() {
+    return bar;
+  }
+
+  public Optional<Zen> getZen() {
+    return Optional.fromNullable(zen);
+  }
+
+  public static class Builder {
+    private Bar bar;
+    private Zen zen;
+
+    public Builder bar(Bar bar) {
+      this.bar = bar;
+      return this;
+    }
+
+    public Builder zen(Zen zen) {
+      this.zen = zen;
+      return this;
+    }
+
+    public Builder fromPrototype(Foo prototype) {
+      bar = prototype.bar;
+      zen = prototype.zen;
+      return this;
+    }
+
+    public Foo build() {
+      return new Foo(this);
+    }
+  }
+}
+```
+
