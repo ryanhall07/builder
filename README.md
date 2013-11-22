@@ -5,7 +5,7 @@ An Intellij plugin to generate a nested static Builder for a Class.
 Why another Builder plugin?
 ---------------------------
 There were several Builder plugins already out there, but none that generated a Builder that conformed to the pattern
-laid out in [Effective Java](https://www.google.com/search?q=effective+java), which we use extensively.  In addition,
+laid out in [Effective Java](http://www.informit.com/articles/article.aspx?p=1216151&seqNum=2), which we use extensively.  In addition,
 the [Features](/README.md#features) outlines other goodies.
 
 Install
@@ -21,7 +21,7 @@ Use
 
 Features
 --------
-* Creates a static nested Builder that conforms to the pattern in Effective Java.
+* Creates a static nested Builder that conforms to the pattern in [Effective Java](http://www.informit.com/articles/article.aspx?p=1216151&seqNum=2).
 * Select what fields you want to include in the Builder.
 * A Guava <code>Preconditions.checkNotNull</code> will be added to the constructor for non-null fields.
 * If <code>javax.persistence</code> annotations exist on fields, nullable will be inferred for the UI dialog box.
@@ -29,7 +29,7 @@ Features
 
 Why a Builder?
 --------------
-Item 2 in Effective Java already advocates using a Builder when your class has a handful of dependencies.
+[Effective Java](http://www.informit.com/articles/article.aspx?p=1216151&seqNum=2) already advocates using a Builder when your class has a handful of dependencies.
 I would take it even further and argue for a Builder when you have 2 or more dependencies.  It makes your Tests more
 readable and easier to construct.  Usually a Test might look something like this:
 
