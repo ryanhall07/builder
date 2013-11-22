@@ -35,7 +35,7 @@ Features
 
 Why a Builder?
 --------------
-Section <b>TODO</b> in Effective Java already advocates using a Builder when your class has a lot of dependencies.
+Item 2 in Effective Java already advocates using a Builder when your class has a handful of dependencies.
 I would take it even further and argue for a Builder when you have 2 or more dependencies.  It makes your Tests more
 readable and easier to construct.  Usually a Test might look something like this:
 
