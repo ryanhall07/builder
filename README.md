@@ -2,6 +2,14 @@ Builder plugin for Intellij
 ================
 An Intellij plugin to generate a nested static Builder for a Class.
 
+* [Why another Builder plugin?](#whyAnotherBuilderPlugin)
+* [Install](#install)  
+* [Use](#use)  
+* [Features](#features)  
+* [Why a Builder?](#whyABuilder)  
+* [Example](#example)
+
+<a name="whyAnotherBuilderPlugin"/>
 Why another Builder plugin?
 ---------------------------
 There were several Builder plugins already out there, but none that generated a Builder that conformed to the pattern
@@ -10,7 +18,7 @@ the [Features](/README.md#features) outlines other goodies.
 
 Install
 -------
-* Download the .jar file from https://git.squareup.com/rhall/builder-plugin/releases
+* Download the .jar file from the latest [release](https://git.squareup.com/rhall/builder-plugin/releases)
 * From Intellij: Preferences -> Plugins -> Install plugin from disk...
 * Restart Intellij
 
@@ -27,6 +35,7 @@ Features
 * If <code>javax.persistence</code> annotations exist on fields, nullable will be inferred for the UI dialog box.
 * Can optionally generate getters, which will return a Guava <code>Optional</code> if the field is nullable.
 
+<a name="whyABuilder"/>
 Why a Builder?
 --------------
 [Effective Java](http://www.informit.com/articles/article.aspx?p=1216151&seqNum=2) already advocates using a Builder when your class has a handful of dependencies.
