@@ -14,12 +14,6 @@ Install
 * From Intellij: Preferences -> Plugins -> Install plugin from disk...
 * Restart Intellij
 
-Update
-------
-* Follow the Install instructions for the latest release .jar file.
-* Intellij seems to be buggy and will report the plugin can be upgraded.  Just ignore.  The version should be correct on the right pane.
-* If something goes wrong, you can always uninstall the plugin and install the latest version.
-
 Use
 -------
 * From a Class, right click -> Generate... -> Builder...
