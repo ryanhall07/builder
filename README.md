@@ -18,7 +18,7 @@ the [Features](/README.md#features) outlines other goodies.
 
 Install
 -------
-* Download the .jar file from the latest [release](https://git.squareup.com/rhall/builder-plugin/releases)
+* Copy the .jar file from ~rhall/Public/builder-plugin.jar [TODO: rhall Host the artifcat somewhere]
 * From Intellij: Preferences -> Plugins -> Install plugin from disk...
 * Restart Intellij
 
