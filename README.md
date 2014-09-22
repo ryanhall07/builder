@@ -33,7 +33,7 @@ Features
 * Select what fields you want to include in the Builder.
 * A Guava <code>Preconditions.checkNotNull</code> will be added to the constructor for non-null fields.
 * If <code>javax.persistence</code> annotations exist on fields, nullable will be inferred for the UI dialog box.
-* Can optionally generate getters, which will return a Guava <code>Optional</code> if the field is nullable.
+* Can optionally generate getters, which will return an <code>Optional</code> if the field is nullable.
 
 <a name="whyABuilder"/>
 Why a Builder?
@@ -54,7 +54,9 @@ public void testBarThingIsDifferent() {
   assertSomethingAboutBar(foo1, foo2);
 }
 ```
+
 Now if we use a Builder and write a test fixture method once:
+
 ```java
 public class TestFixtures {
   ...
@@ -66,7 +68,9 @@ public class TestFixtures {
   ...
 }
 ```
+
 Now we can reuse the fixture method everywhere and only override exactly what we care about.
+
 ```java
 public void testBarThingIsDifferent() {
   Bar bar1 = testFixtures.newBarBuilder()
@@ -84,6 +88,7 @@ public void testBarThingIsDifferent() {
   assertSomethingAboutBar(foo1, foo2);
 }
 ```
+
 Some good things about the new Test:
 
 1.  We've completely removed the construction of objects we don't care about, like <code>Zen</code>
@@ -94,13 +99,16 @@ Example
 The main drawback to using a Builder is the tedious overhead to write one.  The fewer dependencies you have, the less
 inclined you are to write one. But we just argued for a Builder with only 2 depenencies?  That's where the plugin comes in!
 Say you have the given class:
+
 ```java
   public class Foo {
      private final Bar bar;
      private final Zen zen; // This can be null.
   }
 ```
+
 With the click of a button you can generate the following code:
+
 ```java
 public class Foo {
 
@@ -117,7 +125,7 @@ public class Foo {
   }
 
   public Optional<Zen> getZen() {
-    return Optional.fromNullable(zen);
+    return Optional.ofNullable(zen);
   }
 
   public static class Builder {

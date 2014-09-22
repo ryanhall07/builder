@@ -12,7 +12,7 @@ import java.util.Map;
 /**
  * Generates the getter methods.
  *
- * <p>Nullable fields will return Guava Optionals</p>
+ * <p>Nullable fields will return Optionals</p>
  */
 public class GettersGenerator implements BuilderGenerator {
 
@@ -27,14 +27,14 @@ public class GettersGenerator implements BuilderGenerator {
       StringBuilder getterStatement = new StringBuilder();
       if (entry.isNullable()) {
         StringBuilder optionalBuilder = new StringBuilder()
-            .append("com.google.common.base.Optional<")
+            .append("java.util.Optional")
             .append(field.getType().getCanonicalText())
             .append(">");
         PsiType optionalType = elementFactory.createTypeFromText(
             optionalBuilder.toString(),
             psiClass);
         getter = elementFactory.createMethod(getGetterMethodName(field), optionalType);
-        getterStatement.append("return Optional.fromNullable(")
+        getterStatement.append("return Optional.ofNullable(")
             .append(field.getName())
             .append(");\n");
       } else {
