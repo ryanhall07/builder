@@ -1,6 +1,7 @@
 package com.squareup.intellij.plugins.builder;
 
 import com.google.common.collect.Maps;
+import com.intellij.openapi.projectRoots.ProjectJdkTable;
 import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElementFactory;
@@ -27,7 +28,7 @@ public class GettersGenerator implements BuilderGenerator {
       StringBuilder getterStatement = new StringBuilder();
       if (entry.isNullable()) {
         StringBuilder optionalBuilder = new StringBuilder()
-            .append("java.util.Optional")
+            .append("java.util.Optional<")
             .append(field.getType().getCanonicalText())
             .append(">");
         PsiType optionalType = elementFactory.createTypeFromText(
