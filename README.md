@@ -18,7 +18,7 @@ the [Features](/README.md#features) outlines other goodies.
 
 Install
 -------
-* Copy the .jar file from ~rhall/Public/builder-plugin.jar [TODO: rhall Host the artifcat somewhere]
+* Download the latest [release](https://github.com/ryanhall07/builder/releases).
 * From Intellij: Preferences -> Plugins -> Install plugin from disk...
 * Restart Intellij
 
